@@ -3,24 +3,23 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Post } from "./entity/post.entity";
 import { Repository } from "typeorm";
 import { CreatePostDTO } from "./dto/create-post.dto";
-import { UsuarioService } from "src/usuario/usuario.service";
+import { UpdatePostDTO } from "./dto/update-post.dto";
 
 @Injectable()
 export class PostService {
     constructor(
-        @InjectRepository(Post) private postRepository: Repository<Post>,
-        private usuarioService: UsuarioService
+        @InjectRepository(Post) private postRepository: Repository<Post>
     ) { }
 
-    getAll(){
+    getAll() {
         return this.postRepository.find()
     }
 
-    getPostByID(id: number){
+    getPostByID(id: number) {
         return this.postRepository.findOne({
             where: {
                 id
-            }, 
+            },
             relations: ['user']
         })
     }
@@ -38,11 +37,15 @@ export class PostService {
         return await this.postRepository.save(post);
     }
 
-    deleteAll(){
+    deleteAll() {
         return this.postRepository.deleteAll();
     }
 
-    deleteByID(id: number){
+    deleteByID(id: number) {
         return this.postRepository.delete(id);
+    }
+
+    update(updateUserDto: UpdatePostDTO) {
+        return this.postRepository.update(updateUserDto.id, updateUserDto);
     }
 }
