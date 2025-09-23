@@ -1,5 +1,4 @@
-import { IsNumber, IsObject, IsString } from "class-validator";
-import { Usuario } from "src/usuario/entity/usuario.entity";
+import { IsNumber, IsString } from "class-validator";
 
 export class CreatePostDTO {
     @IsNumber()
