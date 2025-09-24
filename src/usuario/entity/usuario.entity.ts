@@ -9,7 +9,9 @@ export class Usuario {
     @Column()
     nome: string;
 
-    @Column()
+    @Column({
+        unique: true
+    })
     email: string;
 
     @OneToMany(type => Post, post => post.usuarioID)
