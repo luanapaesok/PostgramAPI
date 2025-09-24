@@ -25,8 +25,6 @@ export class PostService {
     }
 
     async create(data: CreatePostDTO) {
-        // let userID = await this.usuarioService.getByID(data.usuarioID!);
-        console.log(data)
         let newPost: CreatePostDTO = {
             usuarioID: data.usuarioID,
             title: data.title,
