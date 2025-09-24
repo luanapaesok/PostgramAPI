@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadGatewayException, BadRequestException, ConflictException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Usuario } from "./entity/usuario.entity";
 import { Repository } from "typeorm";
@@ -20,12 +20,14 @@ export class UsuarioService {
     }
 
     async create(data: CreateUsuarioDTO) {
-        if (await this.usuarioRepository.exists({
+        const validatdeUser = await this.usuarioRepository.findOne({
             where: {
                 email: data.email
             }
-        })) {
-            throw new BadRequestException("Este e-mail já está cadastrado.");
+        });
+
+        if (validatdeUser) {
+            throw new ConflictException("Este e-mail já existe no sistema.");
         }
 
         let user = this.usuarioRepository.create(data);
@@ -52,20 +54,17 @@ export class UsuarioService {
     }
 
     async update(updateUserDto: UpdateUsuarioDTO) {
+        const user = await this.usuarioRepository.findOne({
+            where: {
+                email: updateUserDto.email
+            }
+        });
+
+        //se o usuario for encontrado e o email e pertencer a outro id
+        if (user && user.id !== updateUserDto.id) {
+            throw new ConflictException("Este e-mail já existe no sistema.");
+        }
+
         return this.usuarioRepository.update(updateUserDto.id, updateUserDto);
-
-        // const user = await this.getByID(updateUserDto.id)
-
-        // const teste = await this.usuarioRepository.exists({
-        //     where: {
-        //         email: updateUserDto.email
-        //     }
-        // })
-        // console.log(teste)
-        // if(!teste){
-        //     return this.usuarioRepository.update(updateUserDto.id, updateUserDto);
-        // } else {
-        //     throw new BadRequestException("Este e-mail já existe.")
-        // }
     }
 }
