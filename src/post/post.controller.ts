@@ -1,8 +1,10 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from "@nestjs/common";
 import { CreatePostDTO } from "./dto/create-post.dto";
 import { PostService } from "./post.service";
 import { UpdatePostDTO } from "./dto/update-post.dto";
+import { AuthGuard } from "src/auth/guard/auth.guard";
 
+@UseGuards(AuthGuard)
 @Controller('post')
 export class PostController {
     constructor(private postService: PostService) { }
