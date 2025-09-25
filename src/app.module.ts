@@ -7,9 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UsuarioModule } from './usuario/usuario.module';
 import { Post } from './post/entity/post.entity';
 import { PostModule } from './post/post.module';
-import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { User } from './users/entity/user.entity';
 
 @Module({
   imports: [
@@ -21,13 +19,11 @@ import { User } from './users/entity/user.entity';
       username: 'root',
       password: 'root',
       database: 'usuarios',
-      entities: [Usuario, Post, User],
+      entities: [Usuario, Post],
       synchronize: true,
     }),
     UsuarioModule,
     PostModule,
-    UsersModule,
-    UsersModule,
     AuthModule,
     ConfigModule.forRoot( {isGlobal: true}  )
   ],
