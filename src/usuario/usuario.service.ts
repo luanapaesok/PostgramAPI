@@ -33,6 +33,7 @@ export class UsuarioService {
         //faz criptografia da senha
         const salt = await bcrypt.genSalt();
         data.password = await bcrypt.hash(data.password, salt);
+        data.posts = [];
 
         //cria e salva usuário
         const user = this.usuarioRepository.create(data);
@@ -71,5 +72,11 @@ export class UsuarioService {
         }
 
         return this.usuarioRepository.update(updateUserDto.id, updateUserDto);
+    }
+
+    async findByEmail(email: string){
+        return await this.usuarioRepository.findOneBy({
+            email
+        })
     }
 }
