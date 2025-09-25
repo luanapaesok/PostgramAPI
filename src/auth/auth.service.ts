@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from "bcrypt";
 import { Usuario } from 'src/usuario/entity/usuario.entity';
@@ -41,5 +41,20 @@ export class AuthService {
         }
 
         return this.createToken(user);
+    }
+
+    checkToken(token: string) {
+
+        try {
+            const data = this.jwtService.verify(token, {
+                secret: process.env.JWT_SECRET,
+                issuer: this.issuer,
+                audience: this.audience
+            });
+            return data
+        } catch (e) {
+            throw new BadRequestException(e.message);
+        }
+
     }
 }
