@@ -1,9 +1,10 @@
-import { BadGatewayException, BadRequestException, ConflictException, Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, ConflictException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Usuario } from "./entity/usuario.entity";
 import { Repository } from "typeorm";
 import { CreateUsuarioDTO } from "./dto/create-usuario.dto";
 import { UpdateUsuarioDTO } from "./dto/update-usuario.dto";
+import * as bcrypt from "bcrypt";
 
 @Injectable()
 export class UsuarioService {
@@ -20,18 +21,22 @@ export class UsuarioService {
     }
 
     async create(data: CreateUsuarioDTO) {
-        const validatdeUser = await this.usuarioRepository.findOne({
+        //verifica se o usuário já existe
+        if (await this.usuarioRepository.exists({
             where: {
                 email: data.email
             }
-        });
-
-        if (validatdeUser) {
-            throw new ConflictException("Este e-mail já existe no sistema.");
+        })) {
+            throw new ConflictException("Este e-mail já está cadastrado.");
         }
 
-        let user = this.usuarioRepository.create(data);
-        return this.usuarioRepository.save(user)
+        //faz criptografia da senha
+        const salt = await bcrypt.genSalt();
+        data.password = await bcrypt.hash(data.password, salt);
+
+        //cria e salva usuário
+        const user = this.usuarioRepository.create(data);
+        return this.usuarioRepository.save([user]);
     }
 
     getAll() {
