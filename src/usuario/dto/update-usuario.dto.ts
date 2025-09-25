@@ -1,4 +1,4 @@
-import { IsEmail, IsNumber, IsString } from "class-validator";
+import { IsEmail, IsNumber, IsString, IsStrongPassword } from "class-validator";
 
 export class UpdateUsuarioDTO {
     @IsString()
@@ -6,6 +6,16 @@ export class UpdateUsuarioDTO {
 
     @IsEmail()
     email: string;
+
+    @IsStrongPassword({
+        minLength: 6,
+        minLowercase: 0,
+        minUppercase: 0,
+        minNumbers: 0,
+        minSymbols: 0,
+    })
+    password: string;
+
 
     @IsNumber()
     id: number;

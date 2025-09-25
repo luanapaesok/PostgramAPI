@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UsuarioModule } from './usuario/usuario.module';
 import { Post } from './post/entity/post.entity';
 import { PostModule } from './post/post.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -22,7 +23,9 @@ import { PostModule } from './post/post.module';
       synchronize: true,
     }),
     UsuarioModule,
-    PostModule
+    PostModule,
+    AuthModule,
+    ConfigModule.forRoot( {isGlobal: true}  )
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -10,9 +10,13 @@ export class Usuario {
     nome: string;
 
     @Column({
-        unique: true
+        unique: true,
+        nullable: false
     })
     email: string;
+
+    @Column()
+    password: string;
 
     @OneToMany(type => Post, post => post.usuarioID)
     posts: Post[];
