@@ -1,4 +1,5 @@
 import { IsEmail, IsString, IsStrongPassword } from "class-validator";
+import { Post } from "src/post/entity/post.entity";
 
 export class CreateUsuarioDTO {
     @IsString()
@@ -15,4 +16,6 @@ export class CreateUsuarioDTO {
         minSymbols: 0,
     })
     password: string;
+    
+    posts: Post[]
 }
