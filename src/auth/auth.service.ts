@@ -1,10 +1,8 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { User } from 'src/users/entity/user.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import * as bcrypt from "bcrypt";
-import { UsersService } from 'src/users/users.service';
+import { Usuario } from 'src/usuario/entity/usuario.entity';
+import { UsuarioService } from 'src/usuario/usuario.service';
 
 @Injectable()
 export class AuthService {
@@ -13,10 +11,10 @@ export class AuthService {
 
     constructor(
         private readonly jwtService: JwtService,
-        private readonly usersService: UsersService
+        private readonly usuarioService: UsuarioService
     ) { }
 
-    createToken(user: User) {
+    createToken(user: Usuario) {
         return {
             accessToken: this.jwtService.sign({
                 id: user.id,
@@ -32,14 +30,14 @@ export class AuthService {
     }
 
     async signin(email: string, password: string) {
-        const user = await this.usersService.findByEmail(email);
+        const user = await this.usuarioService.findByEmail(email)
 
         if (!user) {
-            throw new ConflictException("Este e-mail já está cadastrado.");
+            throw new ConflictException("Email ou senha incorretos.");
         }
 
-        if (!await bcrypt.compare(password, user.password)) {
-            throw new ConflictException("Este e-mail já está cadastrado.");
+        if (! await bcrypt.compare(password, user.password)) {
+            throw new ConflictException("Email ou senha incorretos.");
         }
 
         return this.createToken(user);
